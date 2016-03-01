@@ -1,17 +1,41 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+author: "Andreas Kunert"
+output: html_document
+keep_md: true
+theme: "spacelab"
 ---
 
 
 ## Loading and preprocessing the data
+This section describes the data integration process. First of all, 
+```{r echo = TRUE, message=FALSE, warning=FALSE}
+library(dplyr)
 
+
+setwd("~/Documents/RepData_PeerAssessment1")
+
+df_act <- tbl_df(read.csv("activity.csv", header = TRUE, sep = ","))
+
+
+
+```
 
 
 ## What is mean total number of steps taken per day?
 
+
+```{r echo = TRUE}
+
+am_step <- mean(df_act$steps, na.rm = TRUE)
+med_step <- median(df_act$steps, na.rm = TRUE)
+```
+The mean total number of steps taken per day is `r am_step` and the median is `r med_step`.
+
+```{r echo = TRUE}
+
+hist(df_act$steps)
+```
 
 
 ## What is the average daily activity pattern?
