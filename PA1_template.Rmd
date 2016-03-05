@@ -1,6 +1,6 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-author: "Andreas Kunert"
+author: "Centrallimit"
 output: html_document
 keep_md: true
 theme: "spacelab"
@@ -8,16 +8,22 @@ theme: "spacelab"
 
 
 ## Loading and preprocessing the data
+
+This document was created on `r Sys.Date()`.
+
 This section describes the data integration process. First of all, 
+
 ```{r echo = TRUE, message=FALSE, warning=FALSE}
 library(dplyr)
+library(ggplot2)
+
 
 
 setwd("~/Documents/RepData_PeerAssessment1")
 
 df_act <- tbl_df(read.csv("activity.csv", header = TRUE, sep = ","))
 
-
+mutate(df_act, date=as.Date(date))
 
 ```
 
@@ -25,25 +31,57 @@ df_act <- tbl_df(read.csv("activity.csv", header = TRUE, sep = ","))
 ## What is mean total number of steps taken per day?
 
 
-```{r echo = TRUE}
+```{r echo = TRUE, message=FALSE, warning=FALSE}
+steps_sum <- df_act %>% 
+        group_by(date) %>%
+        summarise(stepssum=sum(steps,na.rm=TRUE))
 
-am_step <- mean(df_act$steps, na.rm = TRUE)
-med_step <- median(df_act$steps, na.rm = TRUE)
+
+c_mean <- mean(steps_sum$stepssum, na.rm = TRUE)
+c_med <- as.numeric(median(steps_sum$stepssum, na.rm = TRUE))
 ```
-The mean total number of steps taken per day is `r am_step` and the median is `r med_step`.
+The mean total number of steps taken per day is `r c_mean` and the median is `r c_med`. 
 
-```{r echo = TRUE}
 
-hist(df_act$steps)
+```{r echo = TRUE, message=FALSE, warning=FALSE}
+ggplot(steps_sum, aes(x=stepssum)) +
+geom_histogram(colour="black", fill="red")
+    
+
 ```
 
 
 ## What is the average daily activity pattern?
 
+```{r echo = TRUE, message = FALSE, warning = FALSE}
+# Grouping and computation of the mean 
+steps_day <-  df_act %>%
+        group_by(interval) %>%
+        summarise(mean_int=mean(steps, na.rm = TRUE))
 
+# Identify the interval with the maximum value of steps
+c_max <- steps_day[which.max(steps_day$mean_int), ]    
+# Time series plot of daily average 
+ggplot(steps_day, aes(interval, mean_int)) + geom_line(color = "red") + xlab("Interval") + ylab("Mean")
+
+```
+
+The interval, that on average across all the days in the dataset, contains the maximum number of steps is `r c_max[1,1]` with an average of `r c_max[1,2]` steps.
 
 ## Imputing missing values
+First of all, we have to compute the number of missing values. 
 
+```{r echo = TRUE}
+# Number of datasets that have missing values
+count_c <- sum(!complete.cases(df_act))
+# Imputing 
+IMP_DF <- df_act %>%
+        filter(steps == !complete.cases) %>%
+        mutate(steps = c_med)
+
+
+```
+The are `r count_c` datasets with missing values in the sample.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
