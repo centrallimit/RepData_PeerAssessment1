@@ -17,11 +17,7 @@ This section describes the data integration process.
 library(dplyr)
 library(ggplot2)
 
-
-
-
 unzip("./activity.zip") # contains activity.csv
-
 
 df_act <- tbl_df(read.csv("activity.csv", header = TRUE, sep = ","))
 
