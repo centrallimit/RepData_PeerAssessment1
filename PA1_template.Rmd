@@ -18,9 +18,7 @@ library(dplyr)
 library(ggplot2)
 
 unzip("./activity.zip") # contains activity.csv
-
 df_act <- tbl_df(read.csv("activity.csv", header = TRUE, sep = ","))
-
 mutate(df_act, date=as.Date(date))
 
 ```
@@ -33,13 +31,10 @@ mutate(df_act, date=as.Date(date))
 steps_sum <- df_act %>% 
         group_by(date) %>%
         summarise(stepssum=sum(steps,na.rm=TRUE))
-
-
 c_mean <- round(mean(steps_sum$stepssum, na.rm = TRUE), 2)
 c_med <- round(median(steps_sum$stepssum, na.rm = TRUE), 2)
 ```
 The mean total number of steps taken per day is `r c_mean` and the median is `r c_med`. 
-
 
 ```{r echo = TRUE, message=FALSE, warning=FALSE}
 ggplot(steps_sum, aes(x=stepssum)) +
@@ -47,7 +42,6 @@ geom_histogram(colour="black", fill="red")
     
 
 ```
-
 
 ## What is the average daily activity pattern?
 

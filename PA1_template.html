@@ -74,9 +74,7 @@ img {
 library(ggplot2)
 
 unzip(&quot;./activity.zip&quot;) # contains activity.csv
-
 df_act &lt;- tbl_df(read.csv(&quot;activity.csv&quot;, header = TRUE, sep = &quot;,&quot;))
-
 mutate(df_act, date=as.Date(date))</code></pre>
 <pre><code>## Source: local data frame [17,568 x 3]
 ## 
@@ -99,8 +97,6 @@ mutate(df_act, date=as.Date(date))</code></pre>
 <pre class="r"><code>steps_sum &lt;- df_act %&gt;% 
         group_by(date) %&gt;%
         summarise(stepssum=sum(steps,na.rm=TRUE))
-
-
 c_mean &lt;- round(mean(steps_sum$stepssum, na.rm = TRUE), 2)
 c_med &lt;- round(median(steps_sum$stepssum, na.rm = TRUE), 2)</code></pre>
 <p>The mean total number of steps taken per day is 9354.23 and the median is 1.039510^{4}.</p>
